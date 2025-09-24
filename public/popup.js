@@ -31,14 +31,22 @@ function showMain() {
 }
 
 function loadSettings() {
-    chrome.storage.sync.get(['apiKey', 'model', 'enabled'], (result) => {
+    chrome.storage.sync.get(['apiKey', 'model', 'enabled', 'tone', 'customPrompt', 'currentFocus', 'responseLength'], (result) => {
         const apiKeyInput = document.getElementById('apiKey');
         const modelSelect = document.getElementById('model');
         const enabledCheckbox = document.getElementById('enabled');
+        const toneSelect = document.getElementById('tone');
+        const customPromptTextarea = document.getElementById('customPrompt');
+        const currentFocusTextarea = document.getElementById('currentFocus');
+        const responseLengthSelect = document.getElementById('responseLength');
         
         if (apiKeyInput) apiKeyInput.value = result.apiKey || '';
         if (modelSelect) modelSelect.value = result.model || 'gpt-3.5-turbo';
         if (enabledCheckbox) enabledCheckbox.checked = result.enabled !== false;
+        if (toneSelect) toneSelect.value = result.tone || 'professional';
+        if (customPromptTextarea) customPromptTextarea.value = result.customPrompt || '';
+        if (currentFocusTextarea) currentFocusTextarea.value = result.currentFocus || '';
+        if (responseLengthSelect) responseLengthSelect.value = result.responseLength || 'medium';
     });
 }
 
@@ -46,19 +54,36 @@ function saveSettings() {
     const apiKeyInput = document.getElementById('apiKey');
     const modelSelect = document.getElementById('model');
     const enabledCheckbox = document.getElementById('enabled');
+    const toneSelect = document.getElementById('tone');
+    const customPromptTextarea = document.getElementById('customPrompt');
+    const currentFocusTextarea = document.getElementById('currentFocus');
+    const responseLengthSelect = document.getElementById('responseLength');
     
     if (!apiKeyInput || !modelSelect || !enabledCheckbox) return;
     
     const apiKey = apiKeyInput.value.trim();
     const model = modelSelect.value;
     const enabled = enabledCheckbox.checked;
+    const tone = toneSelect ? toneSelect.value : 'professional';
+    const customPrompt = customPromptTextarea ? customPromptTextarea.value.trim() : '';
+    const currentFocus = currentFocusTextarea ? currentFocusTextarea.value.trim() : '';
+    const responseLength = responseLengthSelect ? responseLengthSelect.value : 'medium';
 
     if (!apiKey || !apiKey.startsWith('sk-')) {
         showMessage('Please enter a valid OpenAI API key', 'error');
         return;
     }
 
-    chrome.storage.sync.set({ apiKey, model, enabled }, () => {
+    chrome.storage.sync.set({ 
+        apiKey, 
+        model, 
+        enabled, 
+        tone, 
+        customPrompt, 
+        currentFocus,
+        responseLength 
+    }, () => {
+        console.log('Settings saved:', { apiKey: '***', model, enabled, tone, customPrompt, currentFocus, responseLength });
         showMessage('Settings saved successfully!', 'success');
         setTimeout(showMain, 1500);
     });

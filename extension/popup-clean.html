@@ -6,10 +6,10 @@
     <style>
         body { 
             width: 350px; 
-            height: 500px; 
+            height: 720px; 
             margin: 0; 
             padding: 0; 
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segue UI', sans-serif; 
         }
         .header { 
             background: linear-gradient(45deg, #1da1f2, #8b5cf6); 
@@ -34,12 +34,30 @@
         .settings-panel { display: none; }
         .form-group { margin-bottom: 15px; }
         .form-group label { display: block; margin-bottom: 5px; font-weight: 600; }
-        .form-group input, .form-group select { 
+        .form-group input, .form-group select, .form-group textarea { 
             width: 100%; 
             padding: 8px; 
             border: 1px solid #ddd; 
             border-radius: 4px; 
             box-sizing: border-box;
+            font-family: inherit;
+        }
+        .form-group textarea {
+            font-size: 12px;
+            line-height: 1.4;
+            resize: vertical;
+            min-height: 40px;
+        }
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #1da1f2;
+            box-shadow: 0 0 0 2px rgba(29, 161, 242, 0.1);
+        }
+        .form-group small {
+            display: block;
+            margin-top: 4px;
+            color: #666;
+            font-size: 11px;
         }
         .btn { 
             padding: 10px 15px; 
@@ -96,6 +114,43 @@
                     <option value="gpt-3.5-turbo">GPT-3.5 Turbo</option>
                     <option value="gpt-4">GPT-4</option>
                 </select>
+            </div>
+
+            <div class="form-group">
+                <label>Response Tone:</label>
+                <select id="tone">
+                    <option value="professional">Professional & Informative</option>
+                    <option value="friendly">Friendly & Conversational</option>
+                    <option value="enthusiastic">Enthusiastic & Engaging</option>
+                    <option value="thoughtful">Thoughtful & Analytical</option>
+                    <option value="casual">Casual & Relaxed</option>
+                    <option value="witty">Witty & Clever</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Custom Prompt (Optional):</label>
+                <textarea id="customPrompt" placeholder="Add specific instructions for how the AI should respond..." 
+                    style="height: 70px;"></textarea>
+                <small>This will be added to the AI's instructions</small>
+            </div>
+
+            <div class="form-group">
+                <label>Today's Focus:</label>
+                <textarea id="currentFocus" placeholder="e.g., Building engagement, Tech trends, Marketing tips..." 
+                    style="height: 50px;"></textarea>
+                <small>What topics are you focusing on today? This helps AI tailor responses</small>
+            </div>
+
+            <div class="form-group">
+                <label>Response Length:</label>
+                <select id="responseLength">
+                    <option value="short">Short (1-2 sentences)</option>
+                    <option value="medium">Medium (2-3 sentences)</option>
+                    <option value="long">Long (3-4 sentences)</option>
+                    <option value="detailed">Detailed (4+ sentences)</option>
+                </select>
+                <small>How long should AI responses be?</small>
             </div>
 
             <div class="form-group">
