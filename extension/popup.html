@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Tweet Helper</title>
+    <style>
+        body { margin: 0; padding: 0; width: 320px; height: 400px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+        .popup-container { width: 100%; height: 100%; background: white; }
+        .header { background: linear-gradient(45deg, #3b82f6, #8b5cf6); color: white; padding: 16px; display: flex; align-items: center; justify-content: space-between; }
+        .header h1 { margin: 0; font-size: 18px; font-weight: bold; }
+        .content { padding: 16px; }
+        .status { text-align: center; margin-bottom: 20px; }
+        .status-badge { display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 20px; font-size: 14px; }
+        .status-active { background: #dcfce7; color: #166534; }
+        .status-inactive { background: #fee2e2; color: #991b1b; }
+        .feature { display: flex; align-items: center; gap: 12px; padding: 12px; background: #f9fafb; border-radius: 8px; margin-bottom: 12px; }
+        .feature-icon { font-size: 24px; }
+        .feature-text h3 { margin: 0 0 4px 0; font-size: 14px; font-weight: 600; }
+        .feature-text p { margin: 0; font-size: 12px; color: #6b7280; }
+        .settings-btn { background: none; border: none; color: white; padding: 8px; border-radius: 4px; cursor: pointer; }
+        .settings-btn:hover { background: rgba(255,255,255,0.2); }
+        .instructions { text-align: center; font-size: 12px; color: #6b7280; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <div class="popup-container">
+        <div class="header">
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="font-size: 24px;">🤖</span>
+                <h1>AI Tweet Helper</h1>
+            </div>
+            <button class="settings-btn" onclick="openSettings()">
+                <span style="font-size: 18px;">⚙️</span>
+            </button>
+        </div>
+        
+        <div class="content">
+            <div class="status">
+                <div class="status-badge status-active" id="statusBadge">
+                    <div style="width: 8px; height: 8px; border-radius: 50%; background: #22c55e;"></div>
+                    <span>Active</span>
+                </div>
+            </div>
+            
+            <div class="feature">
+                <span class="feature-icon">🐦</span>
+                <div class="feature-text">
+                    <h3>Smart Replies</h3>
+                    <p>Generate contextual tweet replies</p>
+                </div>
+            </div>
+            
+            <div class="feature">
+                <span class="feature-icon">✨</span>
+                <div class="feature-text">
+                    <h3>Tweet Enhancement</h3>
+                    <p>Improve your tweet drafts</p>
+                </div>
+            </div>
+            
+            <div class="feature">
+                <span class="feature-icon">⚡</span>
+                <div class="feature-text">
+                    <h3>Quick Actions</h3>
+                    <p>One-click AI assistance</p>
+                </div>
+            </div>
+            
+            <div class="instructions">
+                Click the 🤖 AI Help button on Twitter to get started
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openSettings() {
+            const apiKey = prompt('Enter your OpenAI API key:');
+            if (apiKey) {
+                chrome.storage.sync.set({ apiKey: apiKey, enabled: true }, () => {
+                    alert('API key saved successfully!');
+                });
+            }
+        }
+        
+        // Check current status
+        chrome.storage.sync.get(['enabled'], (result) => {
+            const statusBadge = document.getElementById('statusBadge');
+            if (result.enabled === false) {
+                statusBadge.className = 'status-badge status-inactive';
+                statusBadge.innerHTML = '<div style="width: 8px; height: 8px; border-radius: 50%; background: #ef4444;"></div><span>Disabled</span>';
+            }
+        });
+    </script>
+</body>
+</html>

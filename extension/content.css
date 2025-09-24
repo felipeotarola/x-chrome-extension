@@ -1,0 +1,25 @@
+/* Styles for AI Tweet Helper content script */
+.ai-helper-button {
+  transition: all 0.2s ease;
+}
+
+.ai-helper-button:hover {
+  background: #1a8cd8 !important;
+  transform: scale(1.05);
+}
+
+.ai-suggestion-popup {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.ai-suggestion-popup button:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+/* Ensure the popup appears above other elements */
+.ai-suggestion-popup {
+  z-index: 999999 !important;
+}

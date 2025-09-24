@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug Test</title>
+    <style>
+        body { width: 300px; height: 200px; font-family: Arial; }
+        .test-btn { padding: 10px; background: blue; color: white; border: none; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h2>Debug Test</h2>
+    <button class="test-btn" onclick="testClick()">Test Click</button>
+    <div id="output"></div>
+    
+    <script>
+        function testClick() {
+            document.getElementById('output').innerHTML = 'Button clicked! ' + new Date().toLocaleTimeString();
+            console.log('Test button clicked');
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Debug popup loaded');
+            document.getElementById('output').innerHTML = 'Popup loaded at ' + new Date().toLocaleTimeString();
+        });
+    </script>
+</body>
+</html>
