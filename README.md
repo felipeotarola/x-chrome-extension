@@ -58,4 +58,9 @@ A Chrome extension built with Next.js that uses AI to help you craft better twee
 - `npm run build:extension` - Build extension only
 - `npm run lint` - Run ESLint
 
+#https://x.com/FelipeOtar40115
+
+<img width="632" height="858" alt="image" src="https://github.com/user-attachments/assets/9d59f0bb-36ce-4536-ae34-3893780d9513" />
+
+
 After making changes, run `npm run build` and reload the extension in Chrome.
