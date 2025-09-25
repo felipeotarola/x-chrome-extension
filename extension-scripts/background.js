@@ -86,11 +86,15 @@ Length: ${lengthInstructions[responseLength]}`;
       systemPrompt += `\n\nToday's Focus: Keep in mind that today's focus is on "${currentFocus}". Try to relate responses to this theme when relevant.`;
     }
 
-    // Build the user prompt
-    let userPrompt = `Please analyze this tweet and provide helpful insights or a thoughtful response:\n\nTweet by ${data.author}: "${data.tweetText}"\n\nProvide analysis, context, or suggest a good response.`;
+    // Build the user prompt with structured format
+    let userPrompt = `Please analyze this tweet and provide a structured response:\n\nTweet by ${data.author}: "${data.tweetText}"\n\nProvide your response in this exact format:
+
+**Analysis:** [Provide thoughtful analysis of the tweet - what it's about, context, key points, or insights]
+
+**Response:** [Suggest a specific, engaging response or reply that would add value to the conversation]`;
 
     if (currentFocus) {
-      userPrompt += `\n\nRemember to consider today's focus on "${currentFocus}" if it's relevant to this tweet.`;
+      userPrompt += `\n\nRemember to consider today's focus on "${currentFocus}" when crafting your analysis and response.`;
     }
 
     // Debug log to check what we're sending

@@ -135,6 +135,27 @@ function showAIResponse(aiResponse, tweetElement) {
   if (existingPopup) {
     existingPopup.remove();
   }
+
+  // Parse structured response if it contains Analysis and Response sections
+  let formattedContent = aiResponse;
+  if (aiResponse.includes('**Analysis:**') && aiResponse.includes('**Response:**')) {
+    const parts = aiResponse.split('**Response:**');
+    const analysisSection = parts[0].replace('**Analysis:**', '').trim();
+    const responseSection = parts[1].trim();
+    
+    formattedContent = `
+      <div style="margin-bottom: 20px;">
+        <div style="font-weight: bold; color: #1d9bf0; margin-bottom: 8px; font-size: 14px;">📊 Analysis:</div>
+        <div style="line-height: 1.5; color: #333; background: #f8f9fa; padding: 12px; border-radius: 8px; border-left: 3px solid #1d9bf0;">${analysisSection}</div>
+      </div>
+      <div style="margin-bottom: 20px;">
+        <div style="font-weight: bold; color: #10a37f; margin-bottom: 8px; font-size: 14px;">💬 Response:</div>
+        <div style="line-height: 1.5; color: #333; background: #f0fdf4; padding: 12px; border-radius: 8px; border-left: 3px solid #10a37f;">${responseSection}</div>
+      </div>
+    `;
+  } else {
+    formattedContent = `<div style="margin-bottom: 20px; line-height: 1.5; color: #333;">${aiResponse}</div>`;
+  }
   
   // Create response popup
   const popup = document.createElement('div');
@@ -145,37 +166,89 @@ function showAIResponse(aiResponse, tweetElement) {
     left: 50% !important;
     transform: translate(-50%, -50%) !important;
     background: white !important;
-    border: 1px solid #ccc !important;
-    border-radius: 12px !important;
-    padding: 20px !important;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.3) !important;
+    border: 1px solid #e1e8ed !important;
+    border-radius: 16px !important;
+    padding: 24px !important;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.12) !important;
     z-index: 10000 !important;
-    max-width: 500px !important;
-    max-height: 400px !important;
+    max-width: 550px !important;
+    max-height: 500px !important;
     overflow-y: auto !important;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
   `;
   
   popup.innerHTML = `
-    <div style="margin-bottom: 15px; font-weight: bold; color: #1d9bf0; font-size: 16px;">🤖 AI Assistant</div>
-    <div style="margin-bottom: 20px; line-height: 1.5; white-space: pre-wrap; color: #333;">${aiResponse}</div>
-    <div style="text-align: right;">
-      <button class="copy-response" style="background: #1d9bf0; color: white; border: none; border-radius: 6px; padding: 8px 16px; margin-right: 10px; cursor: pointer; font-size: 14px;">Copy</button>
-      <button class="close-response" style="background: #ccc; color: black; border: none; border-radius: 6px; padding: 8px 16px; cursor: pointer; font-size: 14px;">Close</button>
+    <div style="margin-bottom: 20px; font-weight: bold; color: #1d9bf0; font-size: 18px; display: flex; align-items: center; gap: 8px;">
+      🤖 AI Assistant
+    </div>
+    ${formattedContent}
+    <div style="display: flex; gap: 12px; justify-content: flex-end; border-top: 1px solid #e1e8ed; padding-top: 16px; margin-top: 16px;">
+      <button class="copy-response" style="background: #1d9bf0; color: white; border: none; border-radius: 8px; padding: 10px 20px; cursor: pointer; font-size: 14px; font-weight: 500; transition: background 0.2s;">Copy Response</button>
+      <button class="copy-analysis" style="background: #10a37f; color: white; border: none; border-radius: 8px; padding: 10px 20px; cursor: pointer; font-size: 14px; font-weight: 500; transition: background 0.2s; display: none;">Copy Analysis</button>
+      <button class="close-response" style="background: #f1f3f4; color: #5f6368; border: none; border-radius: 8px; padding: 10px 20px; cursor: pointer; font-size: 14px; font-weight: 500; transition: background 0.2s;">Close</button>
     </div>
   `;
   
   document.body.appendChild(popup);
   
   // Add event listeners
-  popup.querySelector('.copy-response').addEventListener('click', () => {
-    navigator.clipboard.writeText(aiResponse).then(() => {
-      showNotification('AI response copied to clipboard!');
+  const copyResponseBtn = popup.querySelector('.copy-response');
+  const copyAnalysisBtn = popup.querySelector('.copy-analysis');
+  const closeBtn = popup.querySelector('.close-response');
+  
+  // If we have structured content, show the copy analysis button and handle separate copying
+  if (aiResponse.includes('**Analysis:**') && aiResponse.includes('**Response:**')) {
+    const parts = aiResponse.split('**Response:**');
+    const analysisText = parts[0].replace('**Analysis:**', '').trim();
+    const responseText = parts[1].trim();
+    
+    copyAnalysisBtn.style.display = 'block';
+    
+    copyResponseBtn.addEventListener('click', () => {
+      navigator.clipboard.writeText(responseText).then(() => {
+        showNotification('Response copied to clipboard!');
+      });
     });
+    
+    copyAnalysisBtn.addEventListener('click', () => {
+      navigator.clipboard.writeText(analysisText).then(() => {
+        showNotification('Analysis copied to clipboard!');
+      });
+    });
+  } else {
+    copyResponseBtn.addEventListener('click', () => {
+      navigator.clipboard.writeText(aiResponse).then(() => {
+        showNotification('AI response copied to clipboard!');
+      });
+    });
+  }
+  
+  closeBtn.addEventListener('click', () => {
+    popup.remove();
   });
   
-  popup.querySelector('.close-response').addEventListener('click', () => {
-    popup.remove();
+  // Add hover effects
+  copyResponseBtn.addEventListener('mouseenter', () => {
+    copyResponseBtn.style.background = '#1a8cd8';
+  });
+  copyResponseBtn.addEventListener('mouseleave', () => {
+    copyResponseBtn.style.background = '#1d9bf0';
+  });
+  
+  if (copyAnalysisBtn.style.display === 'block') {
+    copyAnalysisBtn.addEventListener('mouseenter', () => {
+      copyAnalysisBtn.style.background = '#0f9970';
+    });
+    copyAnalysisBtn.addEventListener('mouseleave', () => {
+      copyAnalysisBtn.style.background = '#10a37f';
+    });
+  }
+  
+  closeBtn.addEventListener('mouseenter', () => {
+    closeBtn.style.background = '#e8eaed';
+  });
+  closeBtn.addEventListener('mouseleave', () => {
+    closeBtn.style.background = '#f1f3f4';
   });
   
   // Close popup when clicking outside
